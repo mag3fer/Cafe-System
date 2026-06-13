@@ -21,42 +21,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dbname = trim($_POST['db_name']   ?? 'cafe_management');
     $appUrl = rtrim(trim($_POST['app_url'] ?? '/cafe'), '/');
 
-    // جرب الاتصال
+    // جرب الاتصال بـ mysqli عشان multi_query
     try {
-        $pdo = new PDO(
-            "mysql:host={$host};charset=utf8mb4",
-            $user, $pass,
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
+        $mysqli = new mysqli($host, $user, $pass);
+        if ($mysqli->connect_error) {
+            throw new Exception('فشل الاتصال: ' . $mysqli->connect_error);
+        }
+        $mysqli->set_charset('utf8mb4');
 
         // اعمل الداتابيز
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbname}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-        $pdo->exec("USE `{$dbname}`");
+        if (!$mysqli->query("CREATE DATABASE IF NOT EXISTS `{$dbname}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")) {
+            throw new Exception('فشل إنشاء قاعدة البيانات: ' . $mysqli->error);
+        }
+        if (!$mysqli->select_db($dbname)) {
+            throw new Exception('فشل اختيار قاعدة البيانات: ' . $mysqli->error);
+        }
 
-        // قرا install.sql وشغّله
+        // قرا install.sql وشغّله بـ multi_query
         $sql = file_get_contents(__DIR__ . '/install.sql');
         if (!$sql) {
             throw new Exception('ملف install.sql مش موجود!');
         }
 
-        // قسّم الـ SQL لـ statements
-        $statements = array_filter(
-            array_map('trim', explode(';', $sql)),
-            function($s) { return $s !== '' && strpos($s, '--') !== 0; }
-        );
-
-        foreach ($statements as $stmt) {
-            if (trim($stmt) === '') continue;
-            try {
-                $pdo->exec($stmt);
-            } catch (PDOException $e) {
-                // تجاهل أخطاء "already exists"
-                if (strpos($e->getMessage(), 'already exists') === false &&
-                    strpos($e->getMessage(), 'Duplicate') === false) {
-                    // ignore other minor errors too
+        // شغّل الـ SQL كاملاً دفعة واحدة
+        if ($mysqli->multi_query($sql)) {
+            // استنى كل الـ results تخلص
+            do {
+                if ($res = $mysqli->store_result()) {
+                    $res->free();
                 }
-            }
+            } while ($mysqli->more_results() && $mysqli->next_result());
         }
+        if ($mysqli->errno) {
+            throw new Exception('خطأ في تنفيذ SQL: ' . $mysqli->error);
+        }
+
+        // تحقق إن الجداول اتعملت فعلاً
+        $check = $mysqli->query("SELECT COUNT(*) AS c FROM information_schema.tables WHERE table_schema='{$dbname}' AND table_name='users'");
+        $row   = $check ? $check->fetch_assoc() : ['c' => 0];
+        if ((int)$row['c'] === 0) {
+            throw new Exception('الجداول لم تُنشأ — تأكد من صحة install.sql');
+        }
+        $mysqli->close();
 
         // اكتب database.php
         $config = '<?php' . "\n";
