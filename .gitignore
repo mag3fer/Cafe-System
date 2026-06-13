@@ -1,0 +1,14 @@
+# Database credentials - never commit this
+config/database.php
+
+# WAMP / XAMPP temp files
+*.log
+*.tmp
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# PHP uploads / cache
+uploads/
+cache/

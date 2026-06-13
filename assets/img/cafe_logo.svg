@@ -1,0 +1,53 @@
+<svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Half Time — Cafe &amp; PlayStation</title>
+  <desc>Logo for Half Time, a cafe and PlayStation gaming center</desc>
+
+  <!-- Steam lines: solid black, thick -->
+  <path d="M328,30 Q333,20 328,11" stroke="#111" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M340,30 Q345,19 340,9"  stroke="#111" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M352,30 Q357,20 352,11" stroke="#111" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Cup body: solid fill -->
+  <rect x="318" y="30" width="44" height="30" rx="5" fill="#111"/>
+  <!-- Handle: thick stroke -->
+  <path d="M362,37 Q380,37 380,45 Q380,53 362,53" stroke="#111" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- Button dots inside cup: white -->
+  <circle cx="329" cy="45" r="4" fill="white"/>
+  <circle cx="340" cy="45" r="4" fill="white"/>
+  <circle cx="351" cy="45" r="4" fill="white"/>
+  <!-- Saucer -->
+  <rect x="310" y="60" width="60" height="7" rx="3.5" fill="#111"/>
+
+  <!-- Left line + diamond -->
+  <line x1="40" y1="100" x2="155" y2="100" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="162,94 169,100 162,106 155,100" fill="#f97316"/>
+
+  <!-- Right line + diamond -->
+  <polygon points="518,94 511,100 518,106 525,100" fill="#f97316"/>
+  <line x1="525" y1="100" x2="640" y2="100" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Main title: solid black, very bold -->
+  <text x="340" y="118"
+        font-family="'Cairo','Arial Black',Arial,sans-serif"
+        text-anchor="middle"
+        font-size="52"
+        font-weight="900"
+        letter-spacing="5"
+        fill="#000">HALF TIME</text>
+
+  <!-- Divider: solid black -->
+  <rect x="155" y="128" width="370" height="3" rx="1.5" fill="#111"/>
+
+  <!-- Subtitle: dark gray, readable -->
+  <text x="340" y="160"
+        font-family="'Cairo','Arial',sans-serif"
+        text-anchor="middle"
+        font-size="17"
+        font-weight="700"
+        letter-spacing="6"
+        fill="#333">CAFE  ·  PLAYSTATION</text>
+
+  <!-- Corner accents -->
+  <rect x="40" y="176" width="50" height="2" rx="1" fill="#999"/>
+  <rect x="590" y="176" width="50" height="2" rx="1" fill="#999"/>
+</svg>
